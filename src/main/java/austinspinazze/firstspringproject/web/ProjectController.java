@@ -1,6 +1,7 @@
 package austinspinazze.firstspringproject.web;
 
 import austinspinazze.firstspringproject.domain.Project;
+import austinspinazze.firstspringproject.services.MapValidationErrorService;
 import austinspinazze.firstspringproject.services.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,9 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
+    @Autowired
+    private MapValidationErrorService mapValidationErrorService;
+
     @PostMapping("")
     // @PostMapping - @PostMapping is specialized version of @RequestMapping annotation that acts as a shortcut for
     // @RequestMapping(method = RequestMethod.POST). @PostMapping annotated methods handle the HTTP POST requests matched
@@ -38,18 +42,9 @@ public class ProjectController {
     // In other words better error messages
     // ResponseEntity<?> (the question mark allows returning of gerneric type)
     public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project, BindingResult result){
-        if(result.hasErrors()) {
 
-            Map<String, String> errorMap = new HashMap<>();
-
-            for(FieldError error: result.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-            return new ResponseEntity<Map<String, String>>(errorMap, HttpStatus.BAD_REQUEST);
-        }
-
-
+        ResponseEntity<?> errorMap = mapValidationErrorService.MapValidationService(result);
+        if(errorMap != null) return errorMap;
 
         Project project1 = projectService.saveOrUpdateProject(project);
         return new ResponseEntity<Project>(project, HttpStatus.CREATED);

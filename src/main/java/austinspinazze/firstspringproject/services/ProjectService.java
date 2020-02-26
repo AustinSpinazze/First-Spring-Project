@@ -1,6 +1,7 @@
 package austinspinazze.firstspringproject.services;
 
 import austinspinazze.firstspringproject.domain.Project;
+import austinspinazze.firstspringproject.exceptions.ProjectIdException;
 import austinspinazze.firstspringproject.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,9 +18,12 @@ public class ProjectService {
     private ProjectRepository projectRepository;
 
     public Project saveOrUpdateProject(Project project) {
-
-        //Logic for saving users, projects, etc.
-
-        return projectRepository.save(project);
+        try {
+            project.setProjectIdentifier((project.getProjectIdentifier().toUpperCase()));
+            return projectRepository.save(project);
+        }
+        catch (Exception e) {
+                throw new ProjectIdException("Project ID '"+project.getProjectIdentifier().toUpperCase()+"' already exists");
+        }
     }
 }
