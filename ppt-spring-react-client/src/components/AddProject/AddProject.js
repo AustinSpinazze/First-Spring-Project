@@ -1,102 +1,48 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import styles from "./AddProjects.module.css";
+import { connect } from "react-redux";
+import {
+  validateProjectId,
+  validateProjectDescription,
+  validateProjectName,
+  projectStartDate,
+  projectEndDate,
+  submitHandler
+} from "../../Redux/createProject/action";
 
-const AddProject = () => {
-  const [projectName, setProjectName] = useState("");
-  const [projectIdentifier, setProjectIdentifier] = useState("");
-  const [description, setDescription] = useState("");
-  const [start_date, setStartDate] = useState("");
-  const [end_date, setEndDate] = useState("");
-  //   const [date] = useState({
-  //     sDate: "",
-  //     eDate: ""
-  //   });
-  const [projectNameError, setProjectNameError] = useState(false);
-  const [projectIdentifierError, setProjectIdentifierError] = useState(false);
-  const [descriptionError, setDescriptionError] = useState(false);
-
-  const onSubmit = event => {
-    event.preventDefault();
-    if (start_date >= end_date) {
-      alert("Please make sure start date is before end date and not the same");
+const AddProject = props => {
+  const submitDateHandler = e => {
+    let today = new Date().toISOString().substring(0, 10);
+    console.log(today, e.target.value);
+    if (Date.parse(props.form.start_date) < Date.parse(today)) {
+      alert("Start date cannot be before current date");
+    } else if (
+      Date.parse(props.form.end_date) < Date.parse(props.form.start_date) ||
+      Date.parse(props.form.end_date) === Date.parse(props.form.start_date)
+    ) {
+      alert("End date must be greater than start date");
     } else {
-      const newProject = {
-        projectName: { projectName },
-        projectIdentifier: { projectIdentifier },
-        description: { description },
-        start_date: { start_date },
-        end_date: { end_date }
-      };
-      console.log(newProject);
+      props.submitHandler();
     }
   };
-
-  const inputCheck = event => {
-    let inputName = event.target.name;
-    if (inputName === "projectName") {
-      if (event.target.value.length <= 30) {
-        setProjectName(event.target.value);
-        setProjectNameError(false);
-      } else {
-        setProjectNameError(true);
-      }
-    } else if (inputName === "projectIdentifier") {
-      if (event.target.value.length < 6) {
-        if (event.target.value.length >= 4) {
-          setProjectIdentifier(event.target.value);
-          setProjectIdentifierError(false);
-        } else if (event.target.value.length === 0) {
-          setProjectIdentifier(event.target.value);
-          setProjectIdentifierError(false);
-        } else {
-          setProjectIdentifier(event.target.value);
-          setProjectIdentifierError(true);
-        }
-      } else {
-        setProjectIdentifierError(true);
-      }
-    } else if (inputName === "description") {
-      if (event.target.value.length < 176) {
-        setDescription(event.target.value);
-        setDescriptionError(false);
-      } else {
-        setDescriptionError(true);
-      }
-    }
-  };
-
-  //   const dateHandler = (startD, endD) => {
-  //     setDates(prevState => {
-  //       if (endD) {
-  //         return {
-  //           ...prevState,
-  //           endDate: endD
-  //         };
-  //       }
-  //       return {
-  //         ...prevState,
-  //         startDate: startD
-  //       };
-  //     });
-  //   };
 
   return (
     <div className={styles.addProjectContainer}>
       <h5>Create / Edit Project form</h5>
       <hr />
-      <form onSubmit={onSubmit}>
+      <form>
         <div>
           <input
+            defaultValue=""
             type="text"
             placeholder="Project Name"
             name="projectName"
-            value={projectName}
             style={
-              projectNameError
+              props.form.projectNameError
                 ? { backgroundColor: "#F08080", opacity: "0.8" }
                 : { backgroundColor: "white" }
             }
-            onChange={inputCheck}
+            onChange={e => props.validateProjectName(e.target.value)}
           />
         </div>
         <div>
@@ -104,26 +50,26 @@ const AddProject = () => {
             type="text"
             placeholder="Unique Project ID"
             name="projectIdentifier"
-            value={projectIdentifier}
+            defaultValue=""
             style={
-              projectIdentifierError
+              props.form.projectIdentifierError
                 ? { backgroundColor: "#F08080", opacity: "0.8" }
                 : { backgroundColor: "white" }
             }
-            onChange={inputCheck}
+            onChange={e => props.validateProjectId(e.target.value)}
           />
         </div>
         <div>
           <textarea
             placeholder="Project Description"
             name="description"
-            value={description}
+            defaultValue=""
             style={
-              descriptionError
+              props.form.descriptionError
                 ? { backgroundColor: "#F08080", opacity: "0.8" }
                 : { backgroundColor: "white" }
             }
-            onChange={inputCheck}
+            onChange={e => props.validateProjectDescription(e.target.value)}
           />
         </div>
         <h6>Start Date</h6>
@@ -131,7 +77,8 @@ const AddProject = () => {
           <input
             type="date"
             name="start_date"
-            onChange={event => setStartDate(event.target.value)}
+            value={props.form.start_date}
+            onChange={e => props.projectStartDate(e.target.value)}
           />
         </div>
         <h6>Estimated End Date</h6>
@@ -139,13 +86,33 @@ const AddProject = () => {
           <input
             type="date"
             name="end_date"
-            onChange={event => setEndDate(event.target.value)}
+            value={props.form.end_date}
+            onChange={e => props.projectEndDate(e.target.value)}
           />
         </div>
-        <input type="submit" />
+        <button type="button" onClick={submitDateHandler}>
+          <span>Submit</span>
+        </button>
       </form>
     </div>
   );
 };
+const mapStateToProps = state => {
+  return {
+    form: state.project
+  };
+};
 
-export default AddProject;
+const mapDispatchToProps = dispatch => {
+  return {
+    validateProjectName: payload => dispatch(validateProjectName(payload)),
+    validateProjectId: payload => dispatch(validateProjectId(payload)),
+    validateProjectDescription: payload =>
+      dispatch(validateProjectDescription(payload)),
+    projectStartDate: payload => dispatch(projectStartDate(payload)),
+    projectEndDate: payload => dispatch(projectEndDate(payload)),
+    submitHandler: () => dispatch(submitHandler())
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddProject);
