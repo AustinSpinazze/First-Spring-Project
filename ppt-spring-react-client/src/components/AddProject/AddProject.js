@@ -15,12 +15,11 @@ import history from "../../history";
 const AddProject = props => {
   useEffect(() => {
     if (props.form.submit === true) {
-      console.log("==================================");
       props.history.push("/dashboard");
     }
-  });
+  }, [props.form.submit]);
 
-  const submitValidateHandler = e => {
+  const validationHandler = e => {
     let today = new Date().toISOString().substring(0, 10);
     console.log(today, e.target.value);
     if (Date.parse(props.form.start_date) < Date.parse(today)) {
@@ -118,7 +117,7 @@ const AddProject = props => {
         <button
           type="button"
           onClick={e => {
-            submitValidateHandler(e);
+            validationHandler(e);
           }}
         >
           <span>Submit</span>

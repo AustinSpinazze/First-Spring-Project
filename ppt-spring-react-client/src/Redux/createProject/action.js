@@ -117,7 +117,7 @@ export function submitValidateHandler(payload) {
   return dispatch => {
     dispatch(submitHandler());
     axios
-      .post("http://localhost:8080/api/project", payload)
+      .post("/project", payload)
       .then(() => dispatch(postProjectCreationSuccess()))
       .catch(err => dispatch(postProjectCreationFailure(err)));
   };
