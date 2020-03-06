@@ -7,7 +7,9 @@ import {
   SUBMIT_HANDLER,
   PROJECT_NAME_ERROR,
   PROJECT_IDENTIFIER_ERROR,
-  PROJECT_DESCRIPTION_ERROR
+  PROJECT_DESCRIPTION_ERROR,
+  POST_PROJECT_CREATION_FAILURE,
+  POST_PROJECT_CREATION_SUCCESS
 } from "./constants";
 
 const initialState = {
@@ -18,7 +20,8 @@ const initialState = {
   end_date: "",
   projectNameError: false,
   projectIdentifierError: false,
-  descriptionError: false
+  descriptionError: false,
+  submit: false
 };
 
 const createProjectReducer = (state = initialState, action) => {
@@ -62,6 +65,9 @@ const createProjectReducer = (state = initialState, action) => {
     case SUBMIT_HANDLER:
       console.log("We submitted yayy", state);
       return state;
+    case POST_PROJECT_CREATION_SUCCESS:
+      console.log("We created the project!");
+      return { ...state, submit: true };
     default:
       return state;
   }

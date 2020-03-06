@@ -1,4 +1,5 @@
-import axios from "axios";
+import axios from "../../axios-config";
+
 import {
   PROJECT_NAME_CHANGE,
   PROJECT_IDENTIFIER_CHANGE,
@@ -8,7 +9,9 @@ import {
   SUBMIT_HANDLER,
   PROJECT_NAME_ERROR,
   PROJECT_IDENTIFIER_ERROR,
-  PROJECT_DESCRIPTION_ERROR
+  PROJECT_DESCRIPTION_ERROR,
+  POST_PROJECT_CREATION_FAILURE,
+  POST_PROJECT_CREATION_SUCCESS
 } from "./constants";
 
 export const projectNameChange = projectName => {
@@ -71,10 +74,19 @@ export const submitHandler = () => {
   };
 };
 
+export const postProjectCreationFailure = error => ({
+  type: POST_PROJECT_CREATION_FAILURE,
+  error
+});
+
+export const postProjectCreationSuccess = () => ({
+  type: POST_PROJECT_CREATION_SUCCESS
+});
+
 export function validateProjectName(payload) {
-  return (dispatch, getState) => {
+  return dispatch => {
     if (payload.length <= 30) {
-      dispatch(projectNameChange(payload, getState));
+      dispatch(projectNameChange(payload));
     } else {
       dispatch(projectNameError());
     }
@@ -82,7 +94,7 @@ export function validateProjectName(payload) {
 }
 
 export function validateProjectId(payload) {
-  return (dispatch, getState) => {
+  return dispatch => {
     if (payload.length < 6) {
       dispatch(projectIdChange(payload));
     } else {
@@ -92,7 +104,7 @@ export function validateProjectId(payload) {
 }
 
 export function validateProjectDescription(payload) {
-  return (dispatch, getState) => {
+  return dispatch => {
     if (payload.length < 256) {
       dispatch(projectDescriptionChange(payload));
     } else {
@@ -101,12 +113,12 @@ export function validateProjectDescription(payload) {
   };
 }
 
-// thunk call passed project name
-// validateProjectName(name){
-//     if(name.length>4 && ){
-//         dispatchEvent(setName)
-//     }
-//     else{
-//         dispatch(setNameError)
-//     }
-// }
+export function submitValidateHandler(payload) {
+  return dispatch => {
+    dispatch(submitHandler());
+    axios
+      .post("http://localhost:8080/api/project", payload)
+      .then(() => dispatch(postProjectCreationSuccess()))
+      .catch(err => dispatch(postProjectCreationFailure(err)));
+  };
+}

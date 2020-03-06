@@ -7,11 +7,20 @@ import {
   validateProjectName,
   projectStartDate,
   projectEndDate,
-  submitHandler
+  submitValidateHandler
 } from "../../Redux/createProject/action";
+import { withRouter } from "react-router";
+import history from "../../history";
 
 const AddProject = props => {
-  const submitDateHandler = e => {
+  useEffect(() => {
+    if (props.form.submit === true) {
+      console.log("==================================");
+      props.history.push("/dashboard");
+    }
+  });
+
+  const submitValidateHandler = e => {
     let today = new Date().toISOString().substring(0, 10);
     console.log(today, e.target.value);
     if (Date.parse(props.form.start_date) < Date.parse(today)) {
@@ -21,8 +30,24 @@ const AddProject = props => {
       Date.parse(props.form.end_date) === Date.parse(props.form.start_date)
     ) {
       alert("End date must be greater than start date");
+    } else if (
+      props.form.projectName === "" ||
+      props.form.projectIdentifier === "" ||
+      props.form.description === "" ||
+      props.form.start_date === "" ||
+      props.form.end_date === ""
+    ) {
+      alert("All input fields are required to create a new project");
     } else {
-      props.submitHandler();
+      let newProject = {
+        projectName: props.form.projectName,
+        projectIdentifier: props.form.projectIdentifier,
+        description: props.form.description,
+        start_date: props.form.start_date,
+        end_date: props.form.end_date
+      };
+      console.log(newProject);
+      props.submitValidateHandler(newProject);
     }
   };
 
@@ -90,7 +115,12 @@ const AddProject = props => {
             onChange={e => props.projectEndDate(e.target.value)}
           />
         </div>
-        <button type="button" onClick={submitDateHandler}>
+        <button
+          type="button"
+          onClick={e => {
+            submitValidateHandler(e);
+          }}
+        >
           <span>Submit</span>
         </button>
       </form>
@@ -111,8 +141,10 @@ const mapDispatchToProps = dispatch => {
       dispatch(validateProjectDescription(payload)),
     projectStartDate: payload => dispatch(projectStartDate(payload)),
     projectEndDate: payload => dispatch(projectEndDate(payload)),
-    submitHandler: () => dispatch(submitHandler())
+    submitValidateHandler: payload => dispatch(submitValidateHandler(payload))
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddProject);
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(AddProject)
+);
