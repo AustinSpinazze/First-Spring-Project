@@ -11,7 +11,8 @@ import {
   PROJECT_IDENTIFIER_ERROR,
   PROJECT_DESCRIPTION_ERROR,
   POST_PROJECT_CREATION_FAILURE,
-  POST_PROJECT_CREATION_SUCCESS
+  POST_PROJECT_CREATION_SUCCESS,
+  RESET_SUBMIT
 } from "./constants";
 
 export const projectNameChange = projectName => {
@@ -54,7 +55,6 @@ export const projectDescriptionError = () => {
 };
 
 export const projectStartDate = start_date => {
-  console.log(start_date, "we made it");
   return {
     type: START_DATE_CHANGE,
     start_date
@@ -74,14 +74,23 @@ export const submitHandler = () => {
   };
 };
 
-export const postProjectCreationFailure = error => ({
-  type: POST_PROJECT_CREATION_FAILURE,
-  error
-});
+export const postProjectCreationFailure = error => {
+  return {
+    type: POST_PROJECT_CREATION_FAILURE,
+    error
+  };
+};
 
 export const postProjectCreationSuccess = () => ({
   type: POST_PROJECT_CREATION_SUCCESS
 });
+
+export const resetSubmit = () => {
+  console.log("Made it to resubmit");
+  return {
+    type: RESET_SUBMIT
+  };
+};
 
 export function validateProjectName(payload) {
   return dispatch => {

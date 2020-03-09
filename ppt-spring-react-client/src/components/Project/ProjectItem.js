@@ -2,33 +2,42 @@ import React from "react";
 import styles from "./ProjectItem.module.css";
 
 const ProjectItem = props => {
+  console.log();
   return (
     <div className={styles.projectItemCardContainer}>
       <div className="container">
         <div className="row">
           <div className="col-sm">
-            <span className={styles.projectFrameworkType}>REACT</span>
+            <span className={styles.projectFrameworkType}>
+              {props.project.projectIdentifier}
+            </span>
           </div>
           <div className="col-sm">
-            <h3>Spring / React Project</h3>
-            <p>Project to create a Kanban Board with Spring Boot and React</p>
+            <h3>{props.project.projectName}</h3>
+            <p>{props.project.description}</p>
           </div>
           <div className="col-md">
             <ul>
               <li>
-                <button href="#">
-                  <span>Project Board</span>
-                </button>
+                <div className={styles.projectItemCardButton}>
+                  <button href="#">
+                    <span>Project Board</span>
+                  </button>
+                </div>
               </li>
               <li>
-                <button href="#">
-                  <span>Update Board</span>
-                </button>
+                <div className={styles.projectItemCardButton}>
+                  <button href="#">
+                    <span>Update Board</span>
+                  </button>
+                </div>
               </li>
               <li>
-                <button href="#">
-                  <span>Delete Board</span>
-                </button>
+                <div className={styles.deleteButton}>
+                  <button href="#">
+                    <span>Delete Board</span>
+                  </button>
+                </div>
               </li>
             </ul>
           </div>

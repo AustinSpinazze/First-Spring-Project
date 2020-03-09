@@ -6,9 +6,11 @@ import { connect } from "react-redux";
 import { getProjects } from "../../Redux/getProjects/actions";
 
 const Dashboard = props => {
+  const project = props.projects.projects;
+  console.log(project.projects);
+
   useEffect(() => {
-    console.log("blah");
-    getProjects();
+    props.getProjects();
   }, []);
 
   return (
@@ -18,7 +20,9 @@ const Dashboard = props => {
       <CreateProjectButton />
       <br />
       <hr />
-      <ProjectItem />
+      {project.projects.map(projects => (
+        <ProjectItem key={projects.id} project={projects} />
+      ))}
     </div>
   );
 };

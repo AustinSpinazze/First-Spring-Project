@@ -7,15 +7,19 @@ import {
   validateProjectName,
   projectStartDate,
   projectEndDate,
-  submitValidateHandler
+  submitValidateHandler,
+  resetSubmit
 } from "../../Redux/createProject/action";
 import { withRouter } from "react-router";
-import history from "../../history";
+import { useHistory } from "react-router-dom";
 
 const AddProject = props => {
+  const history = useHistory();
   useEffect(() => {
     if (props.form.submit === true) {
-      props.history.push("/dashboard");
+      props.resetSubmit();
+      console.log("===============================");
+      history.push("/dashboard");
     }
   }, [props.form.submit]);
 
@@ -140,7 +144,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(validateProjectDescription(payload)),
     projectStartDate: payload => dispatch(projectStartDate(payload)),
     projectEndDate: payload => dispatch(projectEndDate(payload)),
-    submitValidateHandler: payload => dispatch(submitValidateHandler(payload))
+    submitValidateHandler: payload => dispatch(submitValidateHandler(payload)),
+    resetSubmit: () => dispatch(resetSubmit())
   };
 };
 

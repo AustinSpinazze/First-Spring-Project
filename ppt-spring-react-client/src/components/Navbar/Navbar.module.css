@@ -47,3 +47,13 @@
 .navigationContainer button:hover:not(.active) {
     color: #61dafb;
 }
+
+.navigationContainerLeft {
+    float: left;
+    margin-left: 200px;
+}
+
+.navigationContainerRight {
+    float: right;
+    margin-right: 200px;
+}
