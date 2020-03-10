@@ -7,8 +7,6 @@ import { getProjects } from "../../Redux/getProjects/actions";
 
 const Dashboard = props => {
   const project = props.projects.projects;
-  console.log(project.projects);
-
   useEffect(() => {
     props.getProjects();
   }, []);

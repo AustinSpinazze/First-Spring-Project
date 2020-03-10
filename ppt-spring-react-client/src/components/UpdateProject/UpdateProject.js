@@ -1,69 +1,67 @@
-import React, { useEffect } from "react";
-import styles from "./AddProjects.module.css";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router";
+import styles from "./UpdateProject.module.css";
 import {
-  validateProjectId,
-  validateProjectDescription,
+  updateProject,
   validateProjectName,
-  projectStartDate,
+  validateProjectDescription,
   projectEndDate,
   submitValidateHandler,
   resetSubmit
-} from "../../Redux/createProject/action";
-import { withRouter } from "react-router";
+} from "../../Redux/updateProject/actions";
 import { useHistory } from "react-router-dom";
 
-const AddProject = props => {
+const UpdateProject = props => {
   const history = useHistory();
+  const [disabled, setDisabled] = useState(false);
+
   useEffect(() => {
-    if (props.form.submit === true) {
+    if (props.updateForm.submit === true) {
       props.resetSubmit();
       history.push("/dashboard");
     }
-  }, [props.form.submit]);
+  }, [props.updateForm.submit]);
+
+  useEffect(() => {
+    const { id } = props.match.params;
+    props.updateProject(id);
+  }, []);
 
   const validationHandler = e => {
     let today = new Date().toISOString().substring(0, 10);
-    if (Date.parse(props.form.start_date) < Date.parse(today)) {
+    if (Date.parse(props.updateForm.start_date) < Date.parse(today)) {
       alert("Start date cannot be before current date");
     } else if (
-      Date.parse(props.form.end_date) < Date.parse(props.form.start_date) ||
-      Date.parse(props.form.end_date) === Date.parse(props.form.start_date)
+      Date.parse(props.updateForm.end_date) <
+        Date.parse(props.updateForm.start_date) ||
+      Date.parse(props.updateForm.end_date) ===
+        Date.parse(props.updateForm.start_date)
     ) {
       alert("End date must be greater than start date");
     } else if (
-      props.form.projectName === "" ||
-      props.form.projectIdentifier === "" ||
-      props.form.description === "" ||
-      props.form.start_date === "" ||
-      props.form.end_date === ""
+      props.updateForm.projectName === "" ||
+      props.updateForm.description === "" ||
+      props.updateForm.end_date === ""
     ) {
       alert("All input fields are required to create a new project");
     } else {
-      let newProject = {
-        projectName: props.form.projectName,
-        projectIdentifier: props.form.projectIdentifier,
-        description: props.form.description,
-        start_date: props.form.start_date,
-        end_date: props.form.end_date
-      };
-      props.submitValidateHandler(newProject);
+      props.submitValidateHandler();
     }
   };
 
-  return (
-    <div className={styles.addProjectContainer}>
-      <h5>Create New Project</h5>
+  return props.updateForm.loading ? (
+    <div>Spinner</div>
+  ) : (
+    <div className={styles.updateProjectContainer}>
+      <h5>Update Project</h5>
       <hr />
       <form>
         <div>
           <input
-            defaultValue=""
-            type="text"
-            placeholder="Project Name"
-            name="projectName"
+            value={props.updateForm.projectName || ""}
             style={
-              props.form.projectNameError
+              props.updateForm.projectNameError
                 ? { backgroundColor: "#F08080", opacity: "0.8" }
                 : { backgroundColor: "white" }
             }
@@ -75,22 +73,23 @@ const AddProject = props => {
             type="text"
             placeholder="Unique Project ID"
             name="projectIdentifier"
-            defaultValue=""
-            style={
-              props.form.projectIdentifierError
-                ? { backgroundColor: "#F08080", opacity: "0.8" }
-                : { backgroundColor: "white" }
-            }
-            onChange={e => props.validateProjectId(e.target.value)}
+            value={props.updateForm.projectIdentifier || ""}
+            disabled
+            // style={
+            //   props.form.projectIdentifierError
+            //     ? { backgroundColor: "#F08080", opacity: "0.8" }
+            //     : { backgroundColor: "white" }
+            // }
+            // onChange={e => props.validateProjectId(e.target.value)}
           />
         </div>
         <div>
           <textarea
             placeholder="Project Description"
             name="description"
-            defaultValue=""
+            value={props.updateForm.description || "absolute"}
             style={
-              props.form.descriptionError
+              props.updateForm.descriptionError
                 ? { backgroundColor: "#F08080", opacity: "0.8" }
                 : { backgroundColor: "white" }
             }
@@ -102,8 +101,8 @@ const AddProject = props => {
           <input
             type="date"
             name="start_date"
-            value={props.form.start_date}
-            onChange={e => props.projectStartDate(e.target.value)}
+            value={props.updateForm.start_date || ""}
+            disabled
           />
         </div>
         <h6>Estimated End Date</h6>
@@ -111,7 +110,7 @@ const AddProject = props => {
           <input
             type="date"
             name="end_date"
-            value={props.form.end_date}
+            value={props.updateForm.end_date || ""}
             onChange={e => props.projectEndDate(e.target.value)}
           />
         </div>
@@ -120,6 +119,7 @@ const AddProject = props => {
           onClick={e => {
             validationHandler(e);
           }}
+          disabled={disabled}
         >
           <span>Submit</span>
         </button>
@@ -129,17 +129,16 @@ const AddProject = props => {
 };
 const mapStateToProps = state => {
   return {
-    form: state.project
+    updateForm: state.updateProject
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
+    updateProject: payload => dispatch(updateProject(payload)),
     validateProjectName: payload => dispatch(validateProjectName(payload)),
-    validateProjectId: payload => dispatch(validateProjectId(payload)),
     validateProjectDescription: payload =>
       dispatch(validateProjectDescription(payload)),
-    projectStartDate: payload => dispatch(projectStartDate(payload)),
     projectEndDate: payload => dispatch(projectEndDate(payload)),
     submitValidateHandler: payload => dispatch(submitValidateHandler(payload)),
     resetSubmit: () => dispatch(resetSubmit())
@@ -147,5 +146,5 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(AddProject)
+  connect(mapStateToProps, mapDispatchToProps)(UpdateProject)
 );

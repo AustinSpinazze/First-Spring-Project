@@ -10,6 +10,7 @@ import {
   Redirect
 } from "react-router-dom";
 import AddProject from "./components/AddProject/AddProject";
+import UpdateProject from "./components/UpdateProject/UpdateProject";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Switch>
           <Route exact path="/dashboard" component={Dashboard} />
           <Route exact path="/addProject" component={AddProject} />
+          <Route exact path="/updateProject/:id" component={UpdateProject} />
           <Redirect to="/dashboard" />
         </Switch>
       </div>

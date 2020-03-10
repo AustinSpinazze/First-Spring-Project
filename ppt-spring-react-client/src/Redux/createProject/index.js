@@ -59,7 +59,6 @@ const createProjectReducer = (state = initialState, action) => {
     case POST_PROJECT_CREATION_SUCCESS:
       return { ...state, submit: true };
     case RESET_SUBMIT:
-      console.log("submit set to false");
       return { ...state, submit: false };
     default:
       return state;

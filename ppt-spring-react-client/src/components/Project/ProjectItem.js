@@ -1,8 +1,8 @@
 import React from "react";
 import styles from "./ProjectItem.module.css";
+import { Link } from "react-router-dom";
 
 const ProjectItem = props => {
-  console.log();
   return (
     <div className={styles.projectItemCardContainer}>
       <div className="container">
@@ -27,9 +27,13 @@ const ProjectItem = props => {
               </li>
               <li>
                 <div className={styles.projectItemCardButton}>
-                  <button href="#">
-                    <span>Update Board</span>
-                  </button>
+                  <Link
+                    to={`/updateProject/${props.project.projectIdentifier}`}
+                  >
+                    <button>
+                      <span>Update Board</span>
+                    </button>
+                  </Link>
                 </div>
               </li>
               <li>
