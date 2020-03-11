@@ -24,13 +24,11 @@ const AddProject = props => {
 
   const validationHandler = e => {
     let today = new Date().toISOString().substring(0, 10);
-    if (Date.parse(props.form.start_date) < Date.parse(today)) {
-      alert("Start date cannot be before current date");
-    } else if (
+    if (
       Date.parse(props.form.end_date) < Date.parse(props.form.start_date) ||
       Date.parse(props.form.end_date) === Date.parse(props.form.start_date)
     ) {
-      alert("End date must be greater than start date");
+      alert("End date must be after start date");
     } else if (
       props.form.projectName === "" ||
       props.form.projectIdentifier === "" ||
@@ -73,7 +71,7 @@ const AddProject = props => {
         <div>
           <input
             type="text"
-            placeholder="Unique Project ID"
+            placeholder="Unique Project ID (up to 5 characters)"
             name="projectIdentifier"
             defaultValue=""
             style={

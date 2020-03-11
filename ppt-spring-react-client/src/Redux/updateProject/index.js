@@ -9,8 +9,10 @@ import {
   PROJECT_DESCRIPTION_ERROR,
   RESET_SUBMIT,
   POST_PROJECT_CREATION_FAILURE,
-  POST_PROJECT_CREATION_SUCCESS
+  POST_PROJECT_CREATION_SUCCESS,
+  RESET_REDIRECT
 } from "./constants";
+import { Redirect } from "react-router";
 
 const initalState = {
   projectName: "",
@@ -22,7 +24,8 @@ const initalState = {
   projectIdentifierError: false,
   descriptionError: false,
   submit: false,
-  initialState: false
+  initialState: false,
+  reDirect: false
 };
 
 const updateProjectReducer = (state = initalState, action) => {
@@ -56,6 +59,10 @@ const updateProjectReducer = (state = initalState, action) => {
       return state;
     case POST_PROJECT_CREATION_SUCCESS:
       return { ...state, submit: true };
+    case GET_PROJECT_ERROR:
+      return { ...state, reDirect: true };
+    case RESET_REDIRECT:
+      return { ...state, reDirect: false };
     default:
       return state;
   }

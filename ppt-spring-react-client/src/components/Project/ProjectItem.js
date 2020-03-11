@@ -7,16 +7,16 @@ const ProjectItem = props => {
     <div className={styles.projectItemCardContainer}>
       <div className="container">
         <div className="row">
-          <div className="col-sm">
+          <div className={styles.projectId}>
             <span className={styles.projectFrameworkType}>
               {props.project.projectIdentifier}
             </span>
           </div>
-          <div className="col-sm">
+          <div className={styles.projectName}>
             <h3>{props.project.projectName}</h3>
             <p>{props.project.description}</p>
           </div>
-          <div className="col-md">
+          <div className={styles.projectButtons}>
             <ul>
               <li>
                 <div className={styles.projectItemCardButton}>

@@ -9,6 +9,7 @@
   padding-top: 10px;
   margin-top: 10px;
   margin-right: 10px;
+  padding-right: 10px;
 }
 
 .projectItemCardContainer:hover {
@@ -17,6 +18,7 @@
 
 .projectItemCardContainer ul {
   list-style: none;
+  padding: 0;
 }
 
 .projectItemCardContainer h3 {
@@ -35,11 +37,13 @@
   font-weight: 400;
   font-style: normal;
   color: #8b97a1;
+  font-size: 18px;
+  word-wrap: break-word;
 }
 
 .projectItemCardButton button {
   display: inline-block;
-  border-radius: 4px;
+  border-radius: 10px;
   background-color: #61dafb;
   border: none;
   color: #ffffff;
@@ -49,8 +53,8 @@
   transition: all 0.5s;
   cursor: pointer;
   margin: 5px;
-  overflow: hidden;
-  white-space: nowrap;
+  word-wrap: break-word;
+  margin-left: 10px;
 }
 
 .projectItemCardButton button span {
@@ -70,7 +74,7 @@
 }
 
 .projectItemCardButton button:hover span {
-  padding-right: 25px;
+  padding-right: 15px;
 }
 
 .projectItemCardButton button:hover span:after {
@@ -120,7 +124,7 @@
 
 .deleteButton button {
   display: inline-block;
-  border-radius: 4px;
+  border-radius: 10px;
   background-color: #61dafb;
   border: none;
   color: #ffffff;
@@ -132,6 +136,7 @@
   margin: 5px;
   overflow: hidden;
   white-space: nowrap;
+  margin-left: 10px;
 }
 
 .deleteButton button:hover {
@@ -157,10 +162,24 @@
 }
 
 .deleteButton button:hover span {
-  padding-right: 25px;
+  padding-right: 15px;
 }
 
 .deleteButton button:hover span:after {
   opacity: 1;
   right: 0;
+}
+
+.projectButtons {
+  max-width: 25%;
+  min-width: 23%;
+}
+
+.projectId {
+  width: 15%;
+}
+
+.projectName {
+  max-width: 60%;
+  min-width: 60%;
 }

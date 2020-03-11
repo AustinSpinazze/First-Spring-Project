@@ -8,7 +8,8 @@ import {
   validateProjectDescription,
   projectEndDate,
   submitValidateHandler,
-  resetSubmit
+  resetSubmit,
+  resetRedirect
 } from "../../Redux/updateProject/actions";
 import { useHistory } from "react-router-dom";
 
@@ -28,11 +29,16 @@ const UpdateProject = props => {
     props.updateProject(id);
   }, []);
 
+  useEffect(() => {
+    if (props.updateForm.reDirect === true) {
+      props.resetRedirect();
+      history.push("/dashboard");
+    }
+  });
+
   const validationHandler = e => {
     let today = new Date().toISOString().substring(0, 10);
-    if (Date.parse(props.updateForm.start_date) < Date.parse(today)) {
-      alert("Start date cannot be before current date");
-    } else if (
+    if (
       Date.parse(props.updateForm.end_date) <
         Date.parse(props.updateForm.start_date) ||
       Date.parse(props.updateForm.end_date) ===
@@ -71,23 +77,17 @@ const UpdateProject = props => {
         <div>
           <input
             type="text"
-            placeholder="Unique Project ID"
+            placeholder="Unique Project ID (up to 5 characters)"
             name="projectIdentifier"
             value={props.updateForm.projectIdentifier || ""}
             disabled
-            // style={
-            //   props.form.projectIdentifierError
-            //     ? { backgroundColor: "#F08080", opacity: "0.8" }
-            //     : { backgroundColor: "white" }
-            // }
-            // onChange={e => props.validateProjectId(e.target.value)}
           />
         </div>
         <div>
           <textarea
             placeholder="Project Description"
             name="description"
-            value={props.updateForm.description || "absolute"}
+            value={props.updateForm.description || ""}
             style={
               props.updateForm.descriptionError
                 ? { backgroundColor: "#F08080", opacity: "0.8" }
@@ -141,7 +141,8 @@ const mapDispatchToProps = dispatch => {
       dispatch(validateProjectDescription(payload)),
     projectEndDate: payload => dispatch(projectEndDate(payload)),
     submitValidateHandler: payload => dispatch(submitValidateHandler(payload)),
-    resetSubmit: () => dispatch(resetSubmit())
+    resetSubmit: () => dispatch(resetSubmit()),
+    resetRedirect: () => dispatch(resetRedirect())
   };
 };
 

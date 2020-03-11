@@ -10,7 +10,8 @@ import {
   PROJECT_DESCRIPTION_ERROR,
   RESET_SUBMIT,
   POST_PROJECT_CREATION_SUCCESS,
-  POST_PROJECT_CREATION_FAILURE
+  POST_PROJECT_CREATION_FAILURE,
+  RESET_REDIRECT
 } from "./constants";
 
 export const getProjectSuccess = payload => {
@@ -68,6 +69,12 @@ export const submitHandler = () => {
 export const resetSubmit = () => {
   return {
     type: RESET_SUBMIT
+  };
+};
+
+export const resetRedirect = () => {
+  return {
+    type: RESET_REDIRECT
   };
 };
 
