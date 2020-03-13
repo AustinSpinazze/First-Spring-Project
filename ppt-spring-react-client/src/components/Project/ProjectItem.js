@@ -1,8 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./ProjectItem.module.css";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { deleteProject } from "../../Redux/deleteProject/actions";
+import DeleteModal from "../DeleteProject/DeleteModal";
+import useDeleteModal from "../DeleteProject/UseDeleteModal";
 
 const ProjectItem = props => {
+  //make new delete loader function close modal here because onDeleteHandler can call any function here
+  const { isShowing, toggle } = useDeleteModal();
+
+  const deleteLoader = () => {
+    console.log("deleteLoader");
+    props.deleteProject(props.project.projectIdentifier);
+    toggle();
+    props.projectLoader();
+  };
+
   return (
     <div className={styles.projectItemCardContainer}>
       <div className="container">
@@ -38,7 +52,7 @@ const ProjectItem = props => {
               </li>
               <li>
                 <div className={styles.deleteButton}>
-                  <button href="#">
+                  <button onClick={toggle}>
                     <span>Delete Board</span>
                   </button>
                 </div>
@@ -47,8 +61,25 @@ const ProjectItem = props => {
           </div>
         </div>
       </div>
+      <DeleteModal
+        onDeleteHandler={deleteLoader}
+        isShowing={isShowing}
+        hide={toggle}
+      />
     </div>
   );
 };
 
-export default ProjectItem;
+const mapStateToProps = state => {
+  return {
+    deleteProjectState: state.deleteProject
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    deleteProject: payload => dispatch(deleteProject(payload))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProjectItem);

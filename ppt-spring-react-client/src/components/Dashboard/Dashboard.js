@@ -3,13 +3,13 @@ import ProjectItem from "../Project/ProjectItem";
 import styles from "./Dashboard.module.css";
 import CreateProjectButton from "../CreateProjectButton/CreateProjectButton";
 import { connect } from "react-redux";
-import { getProjects } from "../../Redux/getProjects/actions";
+import { getProjects, loadProjects } from "../../Redux/getProjects/actions";
 
 const Dashboard = props => {
-  const project = props.projects.projects;
   useEffect(() => {
+    console.log(props.projects.projects.loading, "");
     props.getProjects();
-  }, []);
+  }, [props.projects.projects]);
 
   return (
     <div className={styles.dashboardContainer}>
@@ -18,22 +18,48 @@ const Dashboard = props => {
       <CreateProjectButton />
       <br />
       <hr />
-      {project.projects.map(projects => (
-        <ProjectItem key={projects.id} project={projects} />
-      ))}
+      {!props.projects.projects.loading ? (
+        <React.Fragment>
+          {props.projects.projects.map(projects => (
+            <ProjectItem
+              key={projects.id}
+              project={projects}
+              projectLoader={props.getProjects}
+            />
+          ))}
+        </React.Fragment>
+      ) : (
+        <React.Fragment>
+          <div className={styles.ldsSpinner}>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </React.Fragment>
+      )}
     </div>
   );
 };
 
 const mapStateToProps = state => {
   return {
-    projects: state
+    projects: state.projects
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    getProjects: () => dispatch(getProjects())
+    getProjects: () => dispatch(getProjects()),
+    loadProjects: () => dispatch(loadProjects())
   };
 };
 
